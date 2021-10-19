@@ -1,6 +1,16 @@
+import numpy as np
+
 def calculate_mse(e):
     """Calculate the mse for vector e."""
     return 1/2*np.mean(e**2)
+
+def standartize(x):
+    """Data standartization"""
+    centered_data = x - np.mean(x, axis=0)
+    std_data = centered_data / np.std(centered_data, axis=0)
+    
+    return std_data
+
 
 #Gradient descent
 
