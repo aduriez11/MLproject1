@@ -5,7 +5,9 @@ def calculate_mse(e):
     return 1/2*np.mean(e**2)
 
 def standartize(x):
-    """Data standartization"""
+    """Data standartization
+    param x: vector of numbers
+    """
     centered_data = x - np.mean(x, axis=0)
     std_data = centered_data / np.std(centered_data, axis=0)
     
@@ -158,3 +160,27 @@ def cross_validation_ridge(y, x, k_indices, k, lambda_, degree):
     loss_te= np.sqrt(2*calculate_mse_(y_test, x_testpoly, w))
   
     return loss_tr, loss_te , w
+
+
+def cross_validation_leastsquares(y, x, k_indices, k, degree):
+  
+    x_test = x[k_indices[k]]
+    y_test = y[k_indices[k]]
+    x_train = []
+    y_train = []
+
+    tr_indice = k_indices[~(np.arange(k_indices.shape[0]) == k)]
+    tr_indice = tr_indice.reshape(-1)
+    x_train = x[tr_indice]
+    y_train = y[tr_indice]
+
+    x_testpoly = build_poly(x_test,degree)
+    x_trainpoly = build_poly(x_train,degree)
+  
+    w,mse = least_squares(y_train, x_trainpoly)
+    loss_tr = np.sqrt(2*calculate_mse_(y_train, x_trainpoly, w))
+    loss_te= np.sqrt(2*calculate_mse_(y_test, x_testpoly, w))
+    #print(loss_tr,loss_te)
+  
+    return loss_tr, loss_te
+
