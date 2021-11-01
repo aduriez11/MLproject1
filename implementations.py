@@ -10,7 +10,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     :param max_iters: int: maximum number of iterations
     :param gamma: float: step of gradient descent
     
-    :return: tuple(float,ndarray): loss and weights
+    :return: tuple(ndarray,float): weights and loss 
     """
     # Define parameters to store w and loss
     ws = [initial_w]
@@ -28,7 +28,7 @@ def least_squares_GD(y, tx, initial_w, max_iters, gamma):
         ws.append(w)
         losses.append(loss)
 
-    return losses[-1], ws[-1]
+    return ws[-1],losses[-1]
 
 from stochastic_gradient_descent import compute_stoch_gradient,batch_iter
 
@@ -42,7 +42,7 @@ def stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
     :param max_iters: int: maximum number of iterations
     :param gamma: float: step of gradient descent
     
-    :return: tuple(float,ndarray): last loss and weights
+    :return: tuple(ndarray,float): weights and loss 
     """
     ws = [initial_w]
     losses = []
@@ -55,7 +55,7 @@ def stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
             w = w-gamma*stoc_grad
             ws.append(w)
             losses.append(loss)
-    return losses[-1], ws[-1]
+    return ws[-1],losses[-1]
 
 from linear_regression import calculate_mse_e
 
@@ -65,13 +65,13 @@ def least_squares(y, tx):
     :param y: ndarray: predicted values
     :param tx: ndarray: regressors
     
-    :return: tuple(float,ndarray): loss and weights
+    :return: tuple(ndarray,float): weights and loss 
     """
     A = tx.T.dot(tx)
     b = tx.T.dot(y)
     w = np.linalg.solve(A, b)
     e = y - tx.dot(w)
-    return calculate_mse_e(e),w
+    return w,calculate_mse_e(e)
 
 from polynomial_regression import calculate_mse
 
@@ -82,7 +82,7 @@ def ridge_regression(y, tx, lambda_):
     :param tx: ndarray: regressors
     :param lambda_: float: penalizing coefficient 
     
-    :return: tuple(float,ndarray): loss and weights
+    :return: tuple(ndarray,float): weights and loss 
     """
     aI = 2 * len(y) * lambda_ * np.identity(tx.shape[1])
     A = tx.T.dot(tx) + aI
@@ -90,7 +90,7 @@ def ridge_regression(y, tx, lambda_):
     w = np.linalg.solve(A,b)
     loss=np.sqrt(2*calculate_mse(y, tx, w))
     
-    return loss, w
+    return w,loss
 
 from logistic_regression import learning_by_gradient_descent
 
@@ -103,7 +103,7 @@ def logistic_regression (y, tx, initial_w,max_iters, gamma):
     :param max_iters: int: maximum number of iterations
     :param gamma: float: step of gradient descent
     
-    :return: tuple(float,ndarray): loss and weights   
+    :return: tuple(ndarray,float): weights and loss  
     """
     threshold=1e-6
     
@@ -125,7 +125,7 @@ def logistic_regression (y, tx, initial_w,max_iters, gamma):
         if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
             break
 
-    return loss,w
+    return w,loss
 
 from penalized_logistic_regression import learning_by_penalized_gradient
 
@@ -139,7 +139,7 @@ def reg_logistic_regression (y, tx,lambda_,initial_w,max_iters, gamma):
     :param max_iters: int: maximum number of iterations
     :param gamma: float: step of gradient descent
     
-    :return: tuple(float,ndarray): loss and weights   
+    :return: tuple(ndarray,float): weights and loss 
     """
     threshold = 1e-6
     losses=[]
@@ -160,4 +160,4 @@ def reg_logistic_regression (y, tx,lambda_,initial_w,max_iters, gamma):
         if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
             break
 
-    return loss,w
+    return w,loss
