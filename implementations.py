@@ -1,7 +1,7 @@
 import numpy as np
 from gradient_descent import compute_gradient
 
-def least_squares_GD(y, tx, initial w, max_iters, gamma):
+def least_squares_GD(y, tx, initial_w, max_iters, gamma):
     """
     Compute linear regression using gradient descent
     :param y: ndarray: predicted values
@@ -94,11 +94,11 @@ def ridge_regression(y, tx, lambda_):
 
 from logistic_regression import learning_by_gradient_descent
 
-def logistic_regression (y, tXst, initial_w,max_iters, gamma):
+def logistic_regression (y, tx, initial_w,max_iters, gamma):
     """
     Logistic regression
     :param y: ndarray: predicted values
-    :param tXst: ndarray: regressors
+    :param tx: ndarray: regressors
     :param initial_w: ndarray: initial vector of weights
     :param max_iters: int: maximum number of iterations
     :param gamma: float: step of gradient descent
@@ -108,15 +108,16 @@ def logistic_regression (y, tXst, initial_w,max_iters, gamma):
     threshold=1e-6
     
     # build tx and ty
-    tx = np.c_[np.ones((y.shape[0], 1)), tXst]
+    tx = np.c_[np.ones((y.shape[0], 1)), tx]
     w = initial_w
     ty=y.reshape(y.shape[0],1)
-
+    
+    losses=[]
     # start the logistic regression
     for iter in range(max_iters):    
         # get loss and update w
         loss, w = learning_by_gradient_descent(ty, tx, w, gamma)
-            
+    
         #store loss
         losses.append(loss)
             
@@ -128,11 +129,11 @@ def logistic_regression (y, tXst, initial_w,max_iters, gamma):
 
 from penalized_logistic_regression import learning_by_penalized_gradient
 
-def reg_logistic_regression (y, tXst,lambda_,initial_w,max_iters, gamma):
+def reg_logistic_regression (y, tx,lambda_,initial_w,max_iters, gamma):
     """
     Penalized logistic regression
     :param y: ndarray: predicted values
-    :param tXst: ndarray: regressors
+    :param tx: ndarray: regressors
     :param lambda_: float: penalized coefficient
     :param initial_w: ndarray: initial vector of weights
     :param max_iters: int: maximum number of iterations
@@ -141,9 +142,9 @@ def reg_logistic_regression (y, tXst,lambda_,initial_w,max_iters, gamma):
     :return: tuple(float,ndarray): loss and weights   
     """
     threshold = 1e-6
-
+    losses=[]
     # build tx and ty
-    tx = np.c_[np.ones((y.shape[0], 1)), tXst]
+    tx = np.c_[np.ones((y.shape[0], 1)), tx]
     ty=y.reshape(y.shape[0],1)
     w=initial_w
 
