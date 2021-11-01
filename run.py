@@ -247,5 +247,5 @@ pred_set_sorted = pred_set[pred_set[:, 0].argsort()]
 ids_test_sorted = pred_set_sorted[:,0]
 ypred_sorted = pred_set_sorted[:,1]
 
-create_csv_submission(ids_test_sorted, ypred_sorted, "ridge_regression.csv")
+create_csv_submission(ids_test_sorted, ypred_sorted, "submission.csv")
 
