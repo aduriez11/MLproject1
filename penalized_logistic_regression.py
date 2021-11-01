@@ -131,7 +131,7 @@ def PenalizedLogisticRegressionValidation(y, tXst, max_iters=10000,threshold=1e-
     res_lambdas=[]
     res_losses=[]
     
-    result = np.where(matrix_te0 == np.amin(matrix_te0))
+    result = np.where(matrix_te0 == np.amax(matrix_te0))
     listOfCoordinates = list(zip(result[0], result[1]))
     best_gamma = listOfCoordinates[0][0]
     best_lambda = listOfCoordinates[0][1]
@@ -140,7 +140,7 @@ def PenalizedLogisticRegressionValidation(y, tXst, max_iters=10000,threshold=1e-
     res_lambdas.append(lambdas[best_lambda])
     res_losses.append(matrix_te0[best_gamma][best_lambda])
     
-    result = np.where(matrix_te1 == np.amin(matrix_te1))
+    result = np.where(matrix_te1 == np.amax(matrix_te1))
     listOfCoordinates = list(zip(result[0], result[1]))
     best_gamma = listOfCoordinates[0][0]
     best_lambda = listOfCoordinates[0][1]
@@ -149,7 +149,7 @@ def PenalizedLogisticRegressionValidation(y, tXst, max_iters=10000,threshold=1e-
     res_lambdas.append(lambdas[best_lambda])
     res_losses.append(matrix_te1[best_gamma][best_lambda])
     
-    result = np.where(matrix_te2 == np.amin(matrix_te2))
+    result = np.where(matrix_te2 == np.amax(matrix_te2))
     listOfCoordinates = list(zip(result[0], result[1]))
     best_gamma = listOfCoordinates[0][0]
     best_lambda = listOfCoordinates[0][1]
@@ -158,7 +158,7 @@ def PenalizedLogisticRegressionValidation(y, tXst, max_iters=10000,threshold=1e-
     res_lambdas.append(lambdas[best_lambda])
     res_losses.append(matrix_te2[best_gamma][best_lambda])
     
-    result = np.where(matrix_te3 == np.amin(matrix_te3))
+    result = np.where(matrix_te3 == np.amax(matrix_te3))
     listOfCoordinates = list(zip(result[0], result[1]))
     best_gamma = listOfCoordinates[0][0]
     best_lambda = listOfCoordinates[0][1]
@@ -209,5 +209,5 @@ def PenalizedLogisticRegressionSubmission(y, tXst, max_iters = 10000,threshold =
 
         #print("Best loss for subset {i}={l}".format(i=i,l=calculate_loss_logistic(ty, tx, w)))
         all_losses.append(losses[-1])
-        weights.append(w[-1])
+        weights.append(w)
     return weights,all_losses

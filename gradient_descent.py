@@ -23,7 +23,7 @@ def gradient_descent(y, tx, initial_w, max_iters, gamma):
     :param max_iters: int: maximum number of iterations
     :param gamma: float: step of gradient descent
     
-    :return: tuple(float,ndarray): last loss and weights
+    :return: tuple(float,ndarray): loss and weights
     """
     # Define parameters to store w and loss
     ws = [initial_w]
@@ -32,7 +32,7 @@ def gradient_descent(y, tx, initial_w, max_iters, gamma):
     for n_iter in range(max_iters):
         # compute loss, gradient
         grad, err = compute_gradient(y, tx, w)
-        #loss = np.sqrt(2*calculate_mse(err))
+
         loss = np.sqrt(2*calculate_mse_e(err))
         # update w by gradient descent
         w = w - gamma * grad

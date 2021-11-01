@@ -106,7 +106,7 @@ def RidgeRegressionSubmission(y,tXst,num_degrees=5,k_fold=4,seed=1,lambdas=np.lo
     best_lambda = listOfCoordinates[0][1]
     print('Best parameters for 0 subset are:',best_degree,lambdas[best_lambda],' with error: ',matrix_te0[best_degree][best_lambda])
     res_degrees.append(best_degree)
-    res_lambdas.append(best_lambda)
+    res_lambdas.append(lambdas[best_lambda])
     res_losses.append(matrix_te0[best_degree][best_lambda])
     
     result = np.where(matrix_te1 == np.amin(matrix_te1))
@@ -115,7 +115,7 @@ def RidgeRegressionSubmission(y,tXst,num_degrees=5,k_fold=4,seed=1,lambdas=np.lo
     best_lambda = listOfCoordinates[0][1]
     print('Best parameters for 1 subset are:',best_degree,lambdas[best_lambda],' with error: ',matrix_te1[best_degree][best_lambda])
     res_degrees.append(best_degree)
-    res_lambdas.append(best_lambda)
+    res_lambdas.append(lambdas[best_lambda])
     res_losses.append(matrix_te1[best_degree][best_lambda])
     
     result = np.where(matrix_te2 == np.amin(matrix_te2))
@@ -124,7 +124,7 @@ def RidgeRegressionSubmission(y,tXst,num_degrees=5,k_fold=4,seed=1,lambdas=np.lo
     best_lambda = listOfCoordinates[0][1]
     print('Best parameters for 2 subset are:',best_degree,lambdas[best_lambda],' with error: ',matrix_te2[best_degree][best_lambda])
     res_degrees.append(best_degree)
-    res_lambdas.append(best_lambda)
+    res_lambdas.append(lambdas[best_lambda])
     res_losses.append(matrix_te2[best_degree][best_lambda])
     
     result = np.where(matrix_te3 == np.amin(matrix_te3))
@@ -133,7 +133,7 @@ def RidgeRegressionSubmission(y,tXst,num_degrees=5,k_fold=4,seed=1,lambdas=np.lo
     best_lambda = listOfCoordinates[0][1]
     print('Best parameters for 3 subset are:',best_degree,lambdas[best_lambda],' with error: ',matrix_te3[best_degree][best_lambda])
     res_degrees.append(best_degree)
-    res_lambdas.append(best_lambda)
+    res_lambdas.append(lambdas[best_lambda])
     res_losses.append(matrix_te3[best_degree][best_lambda])
     
     return res_degrees,res_lambdas,res_losses
