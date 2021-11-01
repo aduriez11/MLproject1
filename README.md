@@ -1,6 +1,6 @@
 # MLproject1
 
-This project was conducted as part of the module CS-433 Machine Learning at EPFL. Our team applied different machine learning methods to build a model that predicts the presence or absence of a Higgs Boson after a proton-proton collision, using characteristics of the collision.
+This project was conducted as part of the module CS-433 Machine Learning at EPFL. Our team applied different machine learning methods (linear regression, polynomial regression, ridge regression, gradient descent, stochastic gradient descent, logistic regression, penalized logistic regression) to build a model that predicts the presence or absence of a Higgs Boson after a proton-proton collision, using characteristics of the collision.
 
 The final model can be found in run.py, which creates a set of predictions that can be submitted to the AIcrowd platform.
 
