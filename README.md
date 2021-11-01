@@ -23,6 +23,6 @@ These methods in other forms that were used during the research can also be foun
 * logistic_regression.py
 * penalized_logistic_regression.py
 
-Files preprocessing.py and cross_validation.py consists of functions used in cleaning data and cross_validation, respectively.
+Files preprocessing.py and cross_validation.py consist of functions used in cleaning data and cross_validation, respectively.
 
 Finally, the notebook final_version.ipynb shows the usage of all these files (the process of preprocessing the data in 4 different ways, then trying to apply different algorithms to these 4 data sets)
