@@ -1,43 +1,27 @@
 import numpy as np
+from gradient_descent import compute_gradient
 
-def calculate_mse(e):
-    """Calculate the mse for vector e."""
-    return 1/2*np.mean(e**2)
-
-def standartize(x):
-    """Data standartization
-    param x: vector of numbers
+def least_squares_GD(y, tx, initial w, max_iters, gamma):
     """
-    centered_data = x - np.mean(x, axis=0)
-    std_data = centered_data / np.std(centered_data, axis=0)
+    Compute linear regression using gradient descent
+    :param y: ndarray: predicted values
+    :param tx: ndarray: regressors
+    :param initial_w: ndarray: initial weights
+    :param max_iters: int: maximum number of iterations
+    :param gamma: float: step of gradient descent
     
-    return std_data
-
-def calculate_mse_(y, tx, w):
-    """Calculate the loss.
-    You can calculate the loss using mse or mae.
+    :return: tuple(float,ndarray): loss and weights
     """
-    e = y - tx.dot(w)
-    return calculate_mse(e)
-
-#Gradient descent
-
-def compute_gradient(y, tx, w):
-    """Compute the gradient."""
-    err = y - tx.dot(w)
-    grad = -tx.T.dot(err) / len(err)
-    return grad, err
-
-def gradient_descent(y, tx, initial_w, max_iters, gamma):
-    """Gradient descent algorithm."""
     # Define parameters to store w and loss
     ws = [initial_w]
     losses = []
     w = initial_w
+    
     for n_iter in range(max_iters):
         # compute loss, gradient
         grad, err = compute_gradient(y, tx, w)
-        loss = calculate_mse(err)
+
+        loss = np.sqrt(2*calculate_mse_e(err))
         # update w by gradient descent
         w = w - gamma * grad
         # store w and loss
@@ -46,32 +30,20 @@ def gradient_descent(y, tx, initial_w, max_iters, gamma):
 
     return losses[-1], ws[-1]
 
-#Stochastic Gradient Descent
-
-def compute_stoch_gradient(y, tx, w):
-    """Compute a stochastic gradient from just few examples n and their corresponding y_n labels."""
-    e = y-tx@w
-    stoc_grad = -1/len(y) * np.transpose(tx)@e
-    return stoc_grad
-    
-
-def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
-    data_size = len(y)
-
-    if shuffle:
-        shuffle_indices = np.random.permutation(np.arange(data_size))
-        shuffled_y = y[shuffle_indices]
-        shuffled_tx = tx[shuffle_indices]
-    else:
-        shuffled_y = y
-        shuffled_tx = tx
-    for batch_num in range(num_batches):
-        start_index = batch_num * batch_size
-        end_index = min((batch_num + 1) * batch_size, data_size)
-        if start_index != end_index:
-            yield shuffled_y[start_index:end_index], shuffled_tx[start_index:end_index]
+from stochastic_gradient_descent import compute_stoch_gradient,batch_iter
 
 def stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
+    """
+    Compute linear regression using stochastic gradient descent
+    :param y: ndarray: predicted values
+    :param tx: ndarray: regressors
+    :param initial_w: ndarray: initial weights
+    :param batch_size: int: size of batch    
+    :param max_iters: int: maximum number of iterations
+    :param gamma: float: step of gradient descent
+    
+    :return: tuple(float,ndarray): last loss and weights
+    """
     ws = [initial_w]
     losses = []
     w = initial_w
@@ -79,108 +51,112 @@ def stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iters, gamma):
         for batcy,batcx in batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
             stoc_grad = compute_stoch_gradient(batcy,batcx,w)
             error=y-tx.dot(w)
-            loss = calculate_mse(error)
+            loss = np.sqrt(2*calculate_mse_e(error))
             w = w-gamma*stoc_grad
             ws.append(w)
             losses.append(loss)
     return losses[-1], ws[-1]
 
-#Least squares with normal equation
+from linear_regression import calculate_mse_e
 
 def least_squares(y, tx):
-    """calculate the least squares solution."""
+    """
+    Calculate the least squares solution
+    :param y: ndarray: predicted values
+    :param tx: ndarray: regressors
+    
+    :return: tuple(float,ndarray): loss and weights
+    """
     A = tx.T.dot(tx)
     b = tx.T.dot(y)
     w = np.linalg.solve(A, b)
     e = y - tx.dot(w)
-    return w, calculate_mse(e)
+    return calculate_mse_e(e),w
 
-#Polynomial regression
-
-def build_poly(x, degree):
-    """polynomial basis functions for input data x, for j=0 up to j=degree."""
-    poly = np.ones((len(x), 1))
-    for deg in range(1, degree+1):
-        poly = np.c_[poly, np.power(x, deg)]
-    return poly
-
-def plot_fitted_curve(y, x, weights, degree, ax):
-    """plot the fitted curve."""
-    ax.scatter(x, y, color='b', s=12, facecolors='none', edgecolors='r')
-    xvals = np.arange(min(x) - 0.1, max(x) + 0.1, 0.1)
-    tx = build_poly(xvals, degree)
-    f = tx.dot(weights)
-    ax.plot(xvals, f)
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
-    ax.set_title("Polynomial degree " + str(degree))
-
-#Ridge regression
-
-#Ridge regression
+from polynomial_regression import calculate_mse
 
 def ridge_regression(y, tx, lambda_):
+    """
+    Build ridge regression with least squares method
+    :param y: ndarray: predicted values
+    :param tx: ndarray: regressors
+    :param lambda_: float: penalizing coefficient 
+    
+    :return: tuple(float,ndarray): loss and weights
+    """
     aI = 2 * len(y) * lambda_ * np.identity(tx.shape[1])
     A = tx.T.dot(tx) + aI
     b = tx.T.dot(y)
     w = np.linalg.solve(A,b)
-    return w
-
-def build_k_indices(y, k_fold, seed):
-    """build k indices for k-fold."""
-    num_row = y.shape[0]
-    interval = int(num_row / k_fold)
-    np.random.seed(seed)
-    indices = np.random.permutation(num_row)
-    k_indices = [indices[k * interval: (k + 1) * interval]
-                 for k in range(k_fold)]
-    return np.array(k_indices),indices
+    loss=np.sqrt(2*calculate_mse(y, tx, w))
     
-#Logistic regression
+    return loss, w
 
-#Cross-validation
-def cross_validation_ridge(y, x, k_indices, k, lambda_, degree):
-  
-    x_test = x[k_indices[k]]
-    y_test = y[k_indices[k]]
-    x_train = []
-    y_train = []
+from logistic_regression import learning_by_gradient_descent
 
-    tr_indice = k_indices[~(np.arange(k_indices.shape[0]) == k)]
-    tr_indice = tr_indice.reshape(-1)
-    x_train = x[tr_indice]
-    y_train = y[tr_indice]
-
-    x_testpoly = build_poly(x_test,degree)
-    x_trainpoly = build_poly(x_train,degree)
-  
-    w = ridge_regression(y_train, x_trainpoly, lambda_)
+def logistic_regression (y, tXst, initial_w,max_iters, gamma):
+    """
+    Logistic regression
+    :param y: ndarray: predicted values
+    :param tXst: ndarray: regressors
+    :param initial_w: ndarray: initial vector of weights
+    :param max_iters: int: maximum number of iterations
+    :param gamma: float: step of gradient descent
     
-    loss_tr = np.sqrt(2*calculate_mse_(y_train, x_trainpoly, w))
-    loss_te= np.sqrt(2*calculate_mse_(y_test, x_testpoly, w))
-  
-    return loss_tr, loss_te , w
+    :return: tuple(float,ndarray): loss and weights   
+    """
+    threshold=1e-6
+    
+    # build tx and ty
+    tx = np.c_[np.ones((y.shape[0], 1)), tXst]
+    w = initial_w
+    ty=y.reshape(y.shape[0],1)
 
+    # start the logistic regression
+    for iter in range(max_iters):    
+        # get loss and update w
+        loss, w = learning_by_gradient_descent(ty, tx, w, gamma)
+            
+        #store loss
+        losses.append(loss)
+            
+        # converge criterion
+        if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
+            break
 
-def cross_validation_leastsquares(y, x, k_indices, k, degree):
-  
-    x_test = x[k_indices[k]]
-    y_test = y[k_indices[k]]
-    x_train = []
-    y_train = []
+    return loss,w
 
-    tr_indice = k_indices[~(np.arange(k_indices.shape[0]) == k)]
-    tr_indice = tr_indice.reshape(-1)
-    x_train = x[tr_indice]
-    y_train = y[tr_indice]
+from penalized_logistic_regression import learning_by_penalized_gradient
 
-    x_testpoly = build_poly(x_test,degree)
-    x_trainpoly = build_poly(x_train,degree)
-  
-    w,mse = least_squares(y_train, x_trainpoly)
-    loss_tr = np.sqrt(2*calculate_mse_(y_train, x_trainpoly, w))
-    loss_te= np.sqrt(2*calculate_mse_(y_test, x_testpoly, w))
-    #print(loss_tr,loss_te)
-  
-    return loss_tr, loss_te
+def reg_logistic_regression (y, tXst,lambda_,initial_w,max_iters, gamma):
+    """
+    Penalized logistic regression
+    :param y: ndarray: predicted values
+    :param tXst: ndarray: regressors
+    :param lambda_: float: penalized coefficient
+    :param initial_w: ndarray: initial vector of weights
+    :param max_iters: int: maximum number of iterations
+    :param gamma: float: step of gradient descent
+    
+    :return: tuple(float,ndarray): loss and weights   
+    """
+    threshold = 1e-6
 
+    # build tx and ty
+    tx = np.c_[np.ones((y.shape[0], 1)), tXst]
+    ty=y.reshape(y.shape[0],1)
+    w=initial_w
+
+    for iter in range(max_iters):
+    
+        # get loss and update w.
+        loss, w = learning_by_penalized_gradient(ty, tx, w, gamma, lambda_)
+        
+        #store loss
+        losses.append(loss)
+        
+        #converge criterion
+        if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
+            break
+
+    return loss,w

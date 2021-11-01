@@ -53,12 +53,12 @@ def learning_by_gradient_descent(y, tx, w, gamma):
     w = w-gamma*grad
     return loss, w
 
-def LogisticRegressionSubmission(y, tXst, max_iter=10000,threshold=1e-6,gamma=0.00001):
+def LogisticRegressionSubmission(y, tXst, max_iters=10000,threshold=1e-6,gamma=0.00001):
     """
     Logistic regression for all the subsets
     :param y: list[ndarray]: list of predicted values for different subsets
     :param tXst: list[ndarray]: list of regressors for different subsets
-    :param max_iter: int: maximum number of iterations
+    :param max_iters: int: maximum number of iterations
     :param threshold: float: bound to stop gradient descent
     :param gamma: float: step of gradient descent
     
@@ -77,7 +77,7 @@ def LogisticRegressionSubmission(y, tXst, max_iter=10000,threshold=1e-6,gamma=0.
 
         #print('Training for subset {0}\n'.format(i))
         # start the logistic regression
-        for iter in range(max_iter):
+        for iter in range(max_iters):
             
             # get loss and update w
             loss, w = learning_by_gradient_descent(ty, tx, w, gamma)

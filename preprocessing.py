@@ -21,7 +21,7 @@ def general_cleaning (y, tX, ids):
     
     :return: tuple(list[ndarray],list[ndarray],list[ndarray]) lists of predicted values, regressors and identificators for all the subsets
     """
-    #splitting to three subsets by integer column
+    #splitting to four subsets by integer column
     tX0=np.copy(tX[tX[:,22]==0,:])
     ids0=np.copy(ids[tX[:,22]==0])
     y0 = np.copy(y[tX[:,22]==0])
