@@ -111,7 +111,7 @@ def create_csv_submission(ids, y_pred, name):
 
 ## Preprocessing of training data
 
-DATA_TRAIN_PATH = 'train.csv' # TODO: download train data and supply path here 
+DATA_TRAIN_PATH = 'data/train.csv' 
 y, tX, ids = load_csv_data(DATA_TRAIN_PATH)
 
 tX0=np.copy(tX[tX[:,22]==0,:])
@@ -176,7 +176,7 @@ tXst = [tX0st, tX1st, tX2st, tX3st]
 
 ## Preprocessing of test data
 
-DATA_TEST_PATH = 'test.csv' 
+DATA_TEST_PATH = 'data/test.csv' 
 y_test, tX_test, ids_test = load_csv_data(DATA_TEST_PATH)
 
 tX0_test=tX_test[tX_test[:,22]==0,:-1]
