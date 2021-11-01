@@ -6,13 +6,7 @@ import csv
 ## Some useful functions
 
 def load_csv_data(data_path, sub_sample=False):
-    """
-    Loads data from csv file
-    :param data_path: string: path to the file
-    :param sub_sample: boolean: whether to load sample or not
-    
-    :return: tuple(ndarray,ndarray,ndarray): y (class labels), tX (features) and ids (event ids)
-    """
+    """Loads data and returns y (class labels), tX (features) and ids (event ids)"""
     y = np.genfromtxt(data_path, delimiter=",", skip_header=1, dtype=str, usecols=1)
     x = np.genfromtxt(data_path, delimiter=",", skip_header=1)
     ids = x[:, 0].astype(np.int)
@@ -31,35 +25,16 @@ def load_csv_data(data_path, sub_sample=False):
     return yb, input_data, ids
 
 def standartize(x):
-    """
-    Data standartization
-    :param x: ndarray: vector
-    
-    :return: ndarray: standartized vector
-    """
     centered_data = x - np.mean(x, axis=0)
     std_data = centered_data / np.std(centered_data, axis=0)
     
     return std_data
 
 def calculate_mse(e):
-    """
-    Calculate the mse for vector e
-    :param e: float: error value
-    
-    :return: float: mean squared error
-    """
+    """Calculate the mse for vector e."""
     return 1/2*np.mean(e**2)
 
 def ridge_regression(y, tx, lambda_):
-    """
-    Build ridge regression with least squares method
-    :param y: ndarray: predicted values
-    :param tx: ndarray: regressors
-    :param lambda_: float: penalizing coefficient 
-    
-    :return: ndarray: weights of the model
-    """
     aI = 2 * len(y) * lambda_ * np.identity(tx.shape[1])
     A = tx.T.dot(tx) + aI
     b = tx.T.dot(y)
@@ -67,26 +42,14 @@ def ridge_regression(y, tx, lambda_):
     return w
 
 def build_poly(x, degree):
-    """
-    Polynomial basis function for input data x, for j=0 up to j=degree
-    :param x: ndarray: regressors
-    :param degree: int: degree of polynomial
-    
-    :return: ndarray: polynomial regressors
-    """
+    """polynomial basis functions for input data x, for j=0 up to j=degree."""
     poly = np.ones((len(x), 1))
     for deg in range(1, degree+1):
         poly = np.c_[poly, np.power(x, deg)]
     return poly
 
 def predict_labels(weights, data):
-    """
-    Generates class predictions
-    :param: ndarray: weights 
-    :param: ndarray: data matrix
-    
-    :return: ndarray: predictions
-    """
+    """Generates class predictions given weights, and a test data matrix"""
     y_pred = np.dot(data, weights)
     y_pred[np.where(y_pred <= 0)] = -1
     y_pred[np.where(y_pred > 0)] = 1
@@ -96,9 +59,9 @@ def predict_labels(weights, data):
 def create_csv_submission(ids, y_pred, name):
     """
     Creates an output file in .csv format for submission to Kaggle or AIcrowd
-    :param ids: ndarray: event ids associated with each prediction
-    :param y_pred: ndarray: predicted class labels
-    :param name: string: name of .csv output file to be created
+    Arguments: ids (event ids associated with each prediction)
+               y_pred (predicted class labels)
+               name (string name of .csv output file to be created)
     """
     with open(name, 'w') as csvfile:
         fieldnames = ['Id', 'Prediction']
