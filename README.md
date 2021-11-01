@@ -10,7 +10,7 @@ This project was conducted as part of the module CS-433 Machine Learning at EPFL
 The final model can be found in run.py, which creates a set of predictions that can be submitted to the AIcrowd platform.
 
 To get predictions you just need:
-1. Unzip files data/test.csv.zip and data/train.csv.zip in the folder data to files test.csv and train.csv, respectively.
+1. Add files test.csv and train.csv in the folder data
 2. Run run.py file ang get file submission.csv with the predictions for the test dataset 
 
 The implementations.py file contains all the different machine learning methods used to build models. 
